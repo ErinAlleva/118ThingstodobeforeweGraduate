@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">118 Things to do before we Graduate</string>
+    <string-array name="things_todo">
+        <item>Sing the Good Ole Song</item>
+        <item>Attend Rotunda Sing</item>
+        <item>High-five Dean Groves</item>
+    </string-array>
+</resources>
