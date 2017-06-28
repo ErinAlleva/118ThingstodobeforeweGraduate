@@ -1,5 +1,6 @@
 package com.eaa4de.a118things.a118thingstodobeforewegraduate;
 
+import java.io.ObjectInput;
 import java.io.Serializable;
 
 public class ChecklistModel implements Serializable {
@@ -20,6 +21,20 @@ public class ChecklistModel implements Serializable {
     public void setValue(int x){
         this.value = x;
     }
+
+    @Override
+    public boolean equals(Object myObject){
+        boolean isEqual = false;
+        if(myObject != null && myObject instanceof ChecklistModel){
+            ChecklistModel myModel = (ChecklistModel) myObject;
+            if (name.equals(myModel.name)) {
+                isEqual = true;
+            }
+        }
+
+        return isEqual;
+    }
+
 
 
 }
