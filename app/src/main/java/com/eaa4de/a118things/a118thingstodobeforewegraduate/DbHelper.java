@@ -24,11 +24,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Checklist.db";
-    public static final String TABLE_CHECKED_ENTRIES = "checked_entries";
-    public static final String CHECKED_ACTIVITY = "checked_activty";
+    //public static final String TABLE_CHECKED_ENTRIES = "checked_entries";
+    //public static final String CHECKED_ACTIVITY = "checked_activty";
     public static final String IS_CHECKED = "is_checked";
-    public static final String TABLE_UNCHECKED_ENTRIES = "unchecked_entries";
-    public static final String UNCHECKED_ACTIVITY = "unchecked_activty";
+    //public static final String TABLE_UNCHECKED_ENTRIES = "unchecked_entries";
+    //public static final String UNCHECKED_ACTIVITY = "unchecked_activty";
     public static final String IS_UNCHECKED = "is_unchecked";
 
     private static final String SQL_CREATE_ENTRIES = " CREATE TABLE " +
@@ -36,15 +36,15 @@ public class DbHelper extends SQLiteOpenHelper {
             + DbHelper.FeedEntry.COLUMN_NAME_ACTIVITY + " TEXT, " +
             DbHelper.FeedEntry.COLUMN_NAME_CHECKED + " TEXT)";
 
-    private static final String SQL_CREATE_CHECKED_ENTRIES = " CREATE TABLE " +
-            TABLE_CHECKED_ENTRIES+ " (" + DbHelper.FeedEntry._ID + " INTEGER PRIMARY KEY,"
-            + DbHelper.FeedEntry.COLUMN_NAME_ACTIVITY + " TEXT, " +
-            DbHelper.FeedEntry.COLUMN_NAME_CHECKED + " TEXT)";
+    //private static final String SQL_CREATE_CHECKED_ENTRIES = " CREATE TABLE " +
+      //      TABLE_CHECKED_ENTRIES+ " (" + DbHelper.FeedEntry._ID + " INTEGER PRIMARY KEY,"
+        //    + DbHelper.FeedEntry.COLUMN_NAME_ACTIVITY + " TEXT, " +
+         //   DbHelper.FeedEntry.COLUMN_NAME_CHECKED + " TEXT)";
 
-    private static final String SQL_CREATE_UNCHECKED_ENTRIES = " CREATE TABLE " +
-            TABLE_UNCHECKED_ENTRIES + " (" + DbHelper.FeedEntry._ID + " INTEGER PRIMARY KEY,"
-            + DbHelper.FeedEntry.COLUMN_NAME_ACTIVITY + " TEXT, " +
-            DbHelper.FeedEntry.COLUMN_NAME_CHECKED + " TEXT)";
+    //private static final String SQL_CREATE_UNCHECKED_ENTRIES = " CREATE TABLE " +
+//            TABLE_UNCHECKED_ENTRIES + " (" + DbHelper.FeedEntry._ID + " INTEGER PRIMARY KEY,"
+ //           + DbHelper.FeedEntry.COLUMN_NAME_ACTIVITY + " TEXT, " +
+  //          DbHelper.FeedEntry.COLUMN_NAME_CHECKED + " TEXT)";
 
 
     public DbHelper(Context context) {
@@ -53,19 +53,19 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
-        db.execSQL(SQL_CREATE_CHECKED_ENTRIES);
-        db.execSQL(SQL_CREATE_UNCHECKED_ENTRIES);
+        //db.execSQL(SQL_CREATE_CHECKED_ENTRIES);
+        //db.execSQL(SQL_CREATE_UNCHECKED_ENTRIES);
     }
 
     public void onDelete(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKED_ENTRIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_UNCHECKED_ENTRIES );
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKED_ENTRIES);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_UNCHECKED_ENTRIES );
         db.execSQL("DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME );
     }
 
     public void onUpgrade(SQLiteDatabase db, int OldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKED_ENTRIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_UNCHECKED_ENTRIES );
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKED_ENTRIES);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_UNCHECKED_ENTRIES );
         db.execSQL("DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME );
         onCreate(db);
     }

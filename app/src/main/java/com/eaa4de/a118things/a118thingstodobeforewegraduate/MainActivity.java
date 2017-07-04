@@ -21,6 +21,8 @@ import okhttp3.OkHttpClient;
 
 import static android.R.attr.id;
 import static android.R.attr.uncertainGestureColor;
+//import static com.eaa4de.a118things.a118thingstodobeforewegraduate.ChecklistContent.masterList;
+//import static com.eaa4de.a118things.a118thingstodobeforewegraduate.ChecklistContent.allList;
 
 
 public class MainActivity extends Activity {
@@ -30,13 +32,7 @@ public class MainActivity extends Activity {
     boolean uncheckedButtonClicked = false;
     boolean allButtonClicked = false;
     boolean checkedButtonClicked = false;
-/*
-    final DbHelper myDbHelper = new DbHelper(this);
-    final SQLiteDatabase db = myDbHelper.getWritableDatabase();
-    final Cursor checkedCursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES, null);
-    final Cursor unCheckedCursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES, null);
 
-*/
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         final Context mContext = this;
@@ -50,8 +46,6 @@ public class MainActivity extends Activity {
         //initialize helper and db
         final DbHelper myDbHelper = new DbHelper(this);
         final SQLiteDatabase db = myDbHelper.getWritableDatabase();
-        Cursor checkedCursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES, null);
-        Cursor unCheckedCursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES, null);
         Cursor cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
 
 
@@ -66,11 +60,12 @@ public class MainActivity extends Activity {
                 .addNetworkInterceptor(new StethoInterceptor())
                 .build();
 
-       /* myDbHelper.onDelete(db);
+        myDbHelper.onDelete(db);
         myDbHelper.onCreate(db);
         checklistFiller.populateArray();
         checklistFiller.insertThings(db);
-*/
+        checklistFiller.createArray(db, cursor);
+
 
         checklistFiller.createArray(db,cursor);
         if (savedInstanceState==null && cursor.moveToFirst()) {
@@ -88,66 +83,47 @@ public class MainActivity extends Activity {
             checklistFiller.createArray(db, cursor);
         }
 
-
-
-
         lv = (ListView) findViewById(R.id.listView1);
+
 
         showCheckedButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Cursor checkedCursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES, null);
-                Cursor unCheckedCursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES, null);
                 Cursor cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
-                //checklistFiller.updateDB(db, myDbHelper);
-                //checklistFiller.checkedList = checklistFiller.readDB(db, checkedCursor, checklistFiller.checkedList);
-                //checklistFiller.updateArray(db, checkedCursor);
                 showCheckedButton.setTextColor(Color.YELLOW);
                 showAllButton.setTextColor(Color.BLACK);
                 showUncheckedButton.setTextColor(Color.BLACK);
                 checkedButtonClicked = true;
                 allButtonClicked = false;
                 uncheckedButtonClicked = false;
-                CustomAdapter adapter = new CustomAdapter(mContext, checklistFiller.readDB(db, checkedCursor, checklistFiller.checkedList));
+                CustomAdapter adapter = new CustomAdapter(mContext, checklistFiller.readDB(db, cursor, 1, 1));
                 lv.setAdapter(adapter);
             }
         });
 
         showAllButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Cursor checkedCursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES, null);
-                Cursor unCheckedCursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES, null);
                 Cursor cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
-                //checklistFiller.updateDB(db, myDbHelper);
-                //checklistFiller.allList = checklistFiller.readDB(db, cursor, checklistFiller.allList);
-                //checklistFiller.updateArray(db, cursor);
                 showAllButton.setTextColor(Color.YELLOW);
                 showUncheckedButton.setTextColor(Color.BLACK);
                 showCheckedButton.setTextColor(Color.BLACK);
                 checkedButtonClicked = false;
                 allButtonClicked = true;
                 uncheckedButtonClicked = false;
-                CustomAdapter adapter = new CustomAdapter(mContext, checklistFiller.readDB(db, cursor, checklistFiller.allList));
+                CustomAdapter adapter = new CustomAdapter(mContext, checklistFiller.readDB(db, cursor, 0, 1));
                 lv.setAdapter(adapter);
             }
         });
 
         showUncheckedButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Cursor checkedCursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES, null);
-                Cursor unCheckedCursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES, null);
                 Cursor cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
-                //checklistFiller.updateDB(db, myDbHelper);
-                //checklistFiller.unCheckedList = checklistFiller.readDB(db, unCheckedCursor, checklistFiller.unCheckedList);
-               // Toast.makeText(mContext,
-                 //       checklistFiller.unCheckedList.toString() , Toast.LENGTH_LONG).show();
-                //checklistFiller.updateArray(db, unCheckedCursor);
                 showAllButton.setTextColor(Color.BLACK);
                 showCheckedButton.setTextColor(Color.BLACK);
                 showUncheckedButton.setTextColor(Color.YELLOW);
                 checkedButtonClicked = false;
                 allButtonClicked = false;
                 uncheckedButtonClicked = true;
-                CustomAdapter adapter = new CustomAdapter(mContext, checklistFiller.readDB(db, unCheckedCursor, checklistFiller.unCheckedList));
+                CustomAdapter adapter = new CustomAdapter(mContext, checklistFiller.readDB(db, cursor, 0,0));
                 lv.setAdapter(adapter);
             }
             //checklistFiller.create
@@ -164,14 +140,14 @@ public class MainActivity extends Activity {
         super.onSaveInstanceState(outState);
         ArrayList<ChecklistModel> hundredThings = new ArrayList<>();
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
-        Cursor cursor;
+        Cursor cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
 
         if (uncheckedButtonClicked) {
-            cursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES,null);
+            //cursor = db.rawQuery("select * from " + DbHelper.TABLE_UNCHECKED_ENTRIES,null);
         } else if (checkedButtonClicked){
-            cursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES,null);
+            //cursor = db.rawQuery("select * from " + DbHelper.TABLE_CHECKED_ENTRIES,null);
         } else {
-            cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
+            //cursor = db.rawQuery("select * from " + DbHelper.FeedEntry.TABLE_NAME,null);
         }
 
        //checks for database existence
